@@ -65,7 +65,11 @@ export async function speakLearningPhrase(grapheme: string, ipa: string, word: s
 
   const ssml = wrapSSML(`
     ${phonemeTag}
-    <break time='350ms'/>
+    <break time='900ms'/>
+    ${phonemeTag}
+    <break time='900ms'/>
+    ${phonemeTag}
+    <break time='600ms'/>
     <prosody pitch="+10%">for</prosody>
     <break time='200ms'/>
     <emphasis level="strong">${word}</emphasis>
