@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'motion/react';
 import { Volume2, ArrowLeft, CheckCircle2, XCircle, Sparkles } from 'lucide-react';
 import { playSound } from './lib/SfxEngine';
@@ -153,35 +153,71 @@ export default function App() {
   const bgColor = useMemo(() => activePhase ? COLORS[activePhase.id - 1] : '#FFFFFF', [activePhase]);
   const showHint = totalSwipes < 5;
 
+  // Exponential spaced repetition tracker
+  const failCountRef = useRef<Map<string, number>>(new Map());
+
   const selectPhase = (phase: Phase) => {
     setActivePhase(phase);
     setQueue([...phase.items]);
     setStreak(0);
+    failCountRef.current = new Map();
     playSound('success');
   };
 
   const handleSwipe = (mastered: boolean) => {
     if (!currentItem) return;
     setTotalSwipes(n => n + 1);
+    const itemId = currentItem.id;
+    const fails = failCountRef.current;
 
     if (mastered) {
       playSound('success', streak);
       setBurst({ x: window.innerWidth / 2, y: window.innerHeight / 2, color: '#4ADE80' });
       setStreak(s => s + 1);
 
-      setTimeout(() => {
-        setQueue(prev => prev.slice(1));
-        setBurst(null);
-      }, 10);
+      const prevFails = fails.get(itemId) || 0;
+
+      if (prevFails > 0) {
+        // Previously failed — don't fully remove yet, do one confidence recheck
+        fails.set(itemId, prevFails - 1);
+        setTimeout(() => {
+          setQueue(prev => {
+            const remaining = [...prev.slice(1)];
+            // Insert one more check further down the line
+            const pos = Math.min(5 + prevFails * 2, remaining.length);
+            remaining.splice(pos, 0, prev[0]);
+            return remaining;
+          });
+          setBurst(null);
+        }, 10);
+      } else {
+        // Clean mastery — remove permanently
+        fails.delete(itemId);
+        setTimeout(() => {
+          setQueue(prev => prev.slice(1));
+          setBurst(null);
+        }, 10);
+      }
     } else {
       playSound('error');
       setIsError(true);
       setStreak(0);
       setTimeout(() => setIsError(false), 400);
 
+      // Increment fail count
+      const prevFails = fails.get(itemId) || 0;
+      const newFails = prevFails + 1;
+      fails.set(itemId, newFails);
+
+      // Insert 2^failCount copies at exponentially spaced positions
+      const copies = Math.min(Math.pow(2, newFails), 8); // cap at 8
       setQueue(prev => {
         const remaining = [...prev.slice(1)];
-        remaining.splice(Math.min(3, remaining.length), 0, prev[0]);
+        for (let i = 0; i < copies; i++) {
+          // Positions: 2, 5, 10, 17... (gaps grow with each copy)
+          const pos = Math.min(2 + i * (i + 2), remaining.length);
+          remaining.splice(pos, 0, prev[0]);
+        }
         return remaining;
       });
     }
