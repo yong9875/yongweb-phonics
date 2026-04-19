@@ -63,17 +63,26 @@ export async function speakLearningPhrase(grapheme: string, ipa: string, word: s
     ? `<phoneme alphabet="ipa" ph="${cleanIpa}">${grapheme}</phoneme>`
     : grapheme;
 
-  const ssml = wrapSSML(`
-    ${phonemeTag}
-    <break time='900ms'/>
-    ${phonemeTag}
-    <break time='900ms'/>
-    ${phonemeTag}
-    <break time='600ms'/>
-    <prosody pitch="+10%">for</prosody>
-    <break time='200ms'/>
-    <emphasis level="strong">${word}</emphasis>
-  `, '-5%');
+  const ssml = `
+    <speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
+      <voice name='${VOICE_NAME}'>
+        <prosody rate='-10%'>
+          ${phonemeTag}
+        </prosody>
+        <break time='900ms'/>
+        <prosody rate='-10%'>
+          ${phonemeTag}
+        </prosody>
+        <break time='900ms'/>
+        <prosody rate='-10%'>
+          ${phonemeTag}
+        </prosody>
+        <break time='600ms'/>
+        for
+        <break time='300ms'/>
+        ${word}
+      </voice>
+    </speak>`.trim();
 
   try {
     const url = await fetchAudioUrl(ssml);
