@@ -75,7 +75,7 @@ export async function speakLearningPhrase(grapheme: string, ipa: string, word: s
         </s>
         <break time='800ms'/>
         <s>
-          <prosody rate='-5%'>for ${word}</prosody>
+          <prosody rate='-5%'>${word}</prosody>
         </s>
       </voice>
     </speak>`.trim();
@@ -85,7 +85,7 @@ export async function speakLearningPhrase(grapheme: string, ipa: string, word: s
     await playAudio(url);
   } catch {
     // Fallback to browser TTS if worker is unreachable
-    fallbackSpeak(`${grapheme} for ${word}`);
+    fallbackSpeak(`${grapheme}, ${word}`);
   }
 }
 

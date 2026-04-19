@@ -97,7 +97,7 @@ const PhonicsCard: React.FC<PhonicsCardProps> = ({ item, isTop, onSwipe, isError
             </div>
           )}
           <div className="text-2xl font-bold font-mono text-black/30">
-            {item.display} for {extractWord(item.audioText)}
+            {item.display}, {extractWord(item.audioText)}
           </div>
         </div>
 
