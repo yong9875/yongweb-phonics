@@ -66,21 +66,17 @@ export async function speakLearningPhrase(grapheme: string, ipa: string, word: s
   const ssml = `
     <speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'>
       <voice name='${VOICE_NAME}'>
-        <prosody rate='-10%'>
-          ${phonemeTag}
-        </prosody>
-        <break time='900ms'/>
-        <prosody rate='-10%'>
-          ${phonemeTag}
-        </prosody>
-        <break time='900ms'/>
-        <prosody rate='-10%'>
-          ${phonemeTag}
-        </prosody>
-        <break time='600ms'/>
-        for
-        <break time='300ms'/>
-        ${word}
+        <s>
+          <prosody rate='-10%'>${phonemeTag}</prosody>
+          <break time='900ms'/>
+          <prosody rate='-10%'>${phonemeTag}</prosody>
+          <break time='900ms'/>
+          <prosody rate='-10%'>${phonemeTag}</prosody>
+        </s>
+        <break time='800ms'/>
+        <s>
+          <prosody rate='-5%'>for ${word}</prosody>
+        </s>
       </voice>
     </speak>`.trim();
 
