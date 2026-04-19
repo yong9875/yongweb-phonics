@@ -86,7 +86,7 @@ const PhonicsCard: React.FC<PhonicsCardProps> = ({ item, isTop, onSwipe, isError
           PHONICS FLOW
         </div>
 
-        {/* Center: Letter + IPA */}
+        {/* Center: Letter + IPA + anchor phrase */}
         <div className="flex-1 flex flex-col items-center justify-center space-y-3">
           <div className="text-9xl font-black font-display tracking-tighter text-black/80">
             {item.display}
@@ -96,15 +96,18 @@ const PhonicsCard: React.FC<PhonicsCardProps> = ({ item, isTop, onSwipe, isError
               {item.ipa}
             </div>
           )}
+          <div className="text-2xl font-bold font-mono text-black/30">
+            {item.display} for {extractWord(item.audioText)}
+          </div>
         </div>
 
         {/* Bottom: Audio button + hint */}
         <div className="flex flex-col items-center space-y-6 w-full">
           <button
             onPointerDown={handleSpeak}
-            className="w-20 h-20 rounded-full bg-black/5 flex items-center justify-center text-black/40 hover:text-black hover:bg-black/10 transition-all active:scale-90"
+            className="w-12 h-12 rounded-full bg-black/5 flex items-center justify-center text-black/40 hover:text-black hover:bg-black/10 transition-all active:scale-90"
           >
-            <Volume2 size={32} />
+            <Volume2 size={20} />
           </button>
 
           {showHint && (
