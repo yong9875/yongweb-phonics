@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Lexend:wght@400;700;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Lexend", system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply antialiased overflow-hidden select-none bg-white;
+    transition: background-color 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+.physical-card {
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.05),
+    0 30px 50px -10px rgba(0, 0, 0, 0.15),
+    0 50px 80px -20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0,0,0,0.02);
+  @apply rounded-[48px] bg-white;
+}
+
+.glow-mint {
+  box-shadow: 0 0 100px 20px rgba(74, 222, 128, 0.15) inset;
+}
+
+.glow-coral {
+  box-shadow: 0 0 100px 20px rgba(248, 113, 113, 0.15) inset;
+}
+
+.text-reveal {
+  background: linear-gradient(90deg, #000 0%, #000 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-position 0.3s ease;
+}
+
+@keyframes spring {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  50% { transform: translateX(8px); }
+  75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+.animate-spring {
+  animation: spring 0.4s ease-in-out;
+}
